@@ -1,0 +1,101 @@
+#! /usr/bin/ruby
+
+
+input = File.read("data/in_example1.txt")
+grid = []
+input.split("\n").each_with_index do |line, y|
+  grid[y] = []
+  line.strip.chars.each_with_index do |char, x|
+    grid[y][x] = char
+  end
+end
+
+def print_grid(grid)
+  grid.each do |line|
+    puts line.join('')
+  end
+end
+
+# print_grid(grid)
+
+def surrounding_symbol(grid, x, y, line_length, non_symbols)
+  # left
+  if(x > 0 && !non_symbols.include?(grid[y][x-1]))
+    p "A #{x}:#{y}=#{grid[y][x-1]}" if y == 2 && x > 118 && x < 125
+    return true
+  end
+  # right
+  if(x < line_length && !non_symbols.include?(grid[y][x+1]))
+    p "B" if y == 2 && x > 118 && x < 125
+    return true
+  end
+  # above
+  if(y > 0 && !non_symbols.include?(grid[y-1][x]))
+    p "C" if y == 2 && x > 118 && x < 125
+    return true
+  end
+  # below
+  if(y < (grid.length-1) && !non_symbols.include?(grid[y+1][x]))
+    p "D" if y == 2 && x > 118 && x < 125
+    return true
+  end
+  # left above
+  if(x > 0 && y > 0 && !non_symbols.include?(grid[y-1][x-1]))
+    p "E" if y == 2 && x > 118 && x < 125
+    return true
+  end
+  # right above
+  if(x < line_length && y > 0 && !non_symbols.include?(grid[y-1][x+1]))
+    p "F" if y == 2 && x > 118 && x < 125
+    return true
+  end
+  # left below
+  if(x > 0 && y < (grid.length-1) && !non_symbols.include?(grid[y+1][x-1]))
+    p "G" if y == 2 && x > 118 && x < 125
+    return true
+  end
+  # right below
+  if(x < line_length && y < (grid.length-1) && !non_symbols.include?(grid[y+1][x+1]))
+    p "H" if y == 2 && x > 118 && x < 125
+    return true
+  end
+  false
+end
+
+serial_numbers = []
+line_length = grid[0].length
+non_symbols = ['.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+grid.each_with_index do |line, y|
+  # p "line: #{y}"
+  nb_start = nil
+  adjacent_symbol = false
+  current_nb = nil
+  line.each_with_index do |char, x|
+    char_nb = Integer char rescue nil
+
+    if char_nb
+      # we continue a number
+      if current_nb
+        current_nb = current_nb * 10 + char_nb
+      else
+        # nb_start = true
+        current_nb = char_nb
+      end
+      # surrounding_symbol(grid, x, y, line_length, non_symbols)
+      adjacent_symbol ||= surrounding_symbol(grid, x, y, line_length, non_symbols)
+    else
+      if current_nb
+        # we ended a number
+        if adjacent_symbol
+          serial_numbers << current_nb
+          p "added serial: #{current_nb} at #{x},#{y}"
+        end
+      end
+      adjacent_symbol = false
+      # nb_start = false
+      current_nb = nil
+    end
+  end
+end
+
+puts "Answer Part A: #{serial_numbers.sum}"
