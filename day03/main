@@ -42,8 +42,6 @@ serial_numbers = []
 line_length = grid[0].length
 non_symbols = ['.', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 grid.each_with_index do |line, y|
-  # p "line: #{y}"
-  nb_start = nil
   adjacent_symbol = false
   current_nb = nil
   line.each_with_index do |char, x|
@@ -54,17 +52,15 @@ grid.each_with_index do |line, y|
       if current_nb
         current_nb = current_nb * 10 + char_nb
       else
-        # nb_start = true
         current_nb = char_nb
       end
-      # surrounding_symbol(grid, x, y, line_length, non_symbols)
       adjacent_symbol ||= surrounding_symbol(grid, x, y, line_length, non_symbols)
 
       if x == (line_length-1)
         # we ended a number
         if adjacent_symbol
           serial_numbers << current_nb
-          p "added serial EOL: #{current_nb} at #{x},#{y}"
+          # p "added serial EOL: #{current_nb} at #{x},#{y}"
         end
       end
     else
@@ -72,11 +68,10 @@ grid.each_with_index do |line, y|
         # we ended a number
         if adjacent_symbol
           serial_numbers << current_nb
-          p "added serial: #{current_nb} at #{x},#{y}"
+          # p "added serial: #{current_nb} at #{x},#{y}"
         end
       end
       adjacent_symbol = false
-      # nb_start = false
       current_nb = nil
     end
   end
