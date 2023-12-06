@@ -1,7 +1,7 @@
 #! /usr/bin/ruby
 
 
-input = File.read("data/in_example1.txt")
+input = File.read("data/in.txt")
 grid = []
 input.split("\n").each_with_index do |line, y|
   grid[y] = []
@@ -20,45 +20,21 @@ end
 
 def surrounding_symbol(grid, x, y, line_length, non_symbols)
   # left
-  if(x > 0 && !non_symbols.include?(grid[y][x-1]))
-    p "A #{x}:#{y}=#{grid[y][x-1]}" if y == 2 && x > 118 && x < 125
-    return true
-  end
+  return true if(x > 0 && !non_symbols.include?(grid[y][x-1]))
   # right
-  if(x < line_length && !non_symbols.include?(grid[y][x+1]))
-    p "B" if y == 2 && x > 118 && x < 125
-    return true
-  end
+  return true if(x < (line_length-1) && !non_symbols.include?(grid[y][x+1]))
   # above
-  if(y > 0 && !non_symbols.include?(grid[y-1][x]))
-    p "C" if y == 2 && x > 118 && x < 125
-    return true
-  end
+  return true if(y > 0 && !non_symbols.include?(grid[y-1][x]))
   # below
-  if(y < (grid.length-1) && !non_symbols.include?(grid[y+1][x]))
-    p "D" if y == 2 && x > 118 && x < 125
-    return true
-  end
+  return true if(y < (grid.length-1) && !non_symbols.include?(grid[y+1][x]))
   # left above
-  if(x > 0 && y > 0 && !non_symbols.include?(grid[y-1][x-1]))
-    p "E" if y == 2 && x > 118 && x < 125
-    return true
-  end
+  return true if(x > 0 && y > 0 && !non_symbols.include?(grid[y-1][x-1]))
   # right above
-  if(x < line_length && y > 0 && !non_symbols.include?(grid[y-1][x+1]))
-    p "F" if y == 2 && x > 118 && x < 125
-    return true
-  end
+  return true if(x < (line_length-1) && y > 0 && !non_symbols.include?(grid[y-1][x+1]))
   # left below
-  if(x > 0 && y < (grid.length-1) && !non_symbols.include?(grid[y+1][x-1]))
-    p "G" if y == 2 && x > 118 && x < 125
-    return true
-  end
+  return true if(x > 0 && y < (grid.length-1) && !non_symbols.include?(grid[y+1][x-1]))
   # right below
-  if(x < line_length && y < (grid.length-1) && !non_symbols.include?(grid[y+1][x+1]))
-    p "H" if y == 2 && x > 118 && x < 125
-    return true
-  end
+  return true if(x < (line_length-1) && y < (grid.length-1) && !non_symbols.include?(grid[y+1][x+1]))
   false
 end
 
@@ -83,6 +59,14 @@ grid.each_with_index do |line, y|
       end
       # surrounding_symbol(grid, x, y, line_length, non_symbols)
       adjacent_symbol ||= surrounding_symbol(grid, x, y, line_length, non_symbols)
+
+      if x == (line_length-1)
+        # we ended a number
+        if adjacent_symbol
+          serial_numbers << current_nb
+          p "added serial EOL: #{current_nb} at #{x},#{y}"
+        end
+      end
     else
       if current_nb
         # we ended a number
