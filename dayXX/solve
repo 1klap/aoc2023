@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+
+require '../cmd_line_parser'
+
+END {
+  run :part1, :part2
+}
+
+def part1(input_path)
+  puts "Part 1 for file: #{input_path}"
+  # _input = File.read(input_path)
+  # res = input.split("\n")
+  #              .map { |line|
+  #                # TODO: implement logic here
+  #              }.sum
+  res = 42
+  puts "Answer Part 1: #{res}"
+end
+
+def part2(input_path)
+  puts "Part 2 for file: #{input_path}"
+  # _input = File.read(input_path)
+  # res = input.split("\n")
+  #              .map { |line|
+  #                # TODO: implement logic here
+  #              }.sum
+  res = 42
+  puts "Answer Part 2: #{res}"
+end
+

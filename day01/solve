@@ -1,14 +1,34 @@
-#! /usr/bin/ruby
+#!/usr/bin/env ruby
 
-input = File.read("data/in.txt")
-res = input.split("\n")
-           .map { |line|
+require '../cmd_line_parser'
+
+END {
+  run :part1, :part2
+}
+
+def part1(input_path)
+  puts "Part 1 for file: #{input_path}"
+  input = File.read(input_path)
+  res = input.split("\n")
+             .map { |line|
                numbers = line.chars
                              .map { |c| Integer c rescue nil }
                              .reject(&:nil?)
                numbers[0] * 10 + numbers[-1]
-             }
-puts "Answer Part A: #{res.sum}"
+             }.sum
+  puts "Answer Part 1: #{res}"
+end
+
+def part2(input_path)
+  puts "Part 2 for file: #{input_path}"
+  input = File.read(input_path)
+  res = input.split("\n")
+             .map { |line|
+               first_nb, last_nb = look_at line
+               first_nb * 10 + last_nb
+             }.sum
+  puts "Answer Part 2: #{res}"
+end
 
 def look_at(line)
   tokens = {'one' => 1,
@@ -35,9 +55,9 @@ def look_at(line)
   }
   # puts "line: #{line} token_forward_indices #{token_forward_indices}"
   numbers_sorted_by_index = token_forward_indices
-        .reject(&:nil?)
-        .sort_by { |a| a[0] }
-        .map { |a| a[1] }
+                              .reject(&:nil?)
+                              .sort_by { |a| a[0] }
+                              .map { |a| a[1] }
   first_number = numbers_sorted_by_index[0]
 
   token_backward_indices = tokens.map { |token|
@@ -45,17 +65,9 @@ def look_at(line)
   }
   # puts "line: #{line} token_backward_indices #{token_backward_indices}"
   numbers_sorted_by_index_from_end = token_backward_indices
-                   .reject(&:nil?)
-                   .sort_by { |a| -a[0] }
-                   .map { |a| a[1] }
+                                       .reject(&:nil?)
+                                       .sort_by { |a| -a[0] }
+                                       .map { |a| a[1] }
   last_number = numbers_sorted_by_index_from_end[0]
   [first_number, last_number]
 end
-
-input = File.read("data/in.txt")
-res = input.split("\n")
-           .map { |line|
-             first_nb, last_nb = look_at line
-             first_nb * 10 + last_nb
-           }
-puts "Answer Part B: #{res.sum}"
